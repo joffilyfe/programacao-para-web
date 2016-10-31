@@ -69,6 +69,7 @@ public class GenericDAO<T, PK extends Serializable> implements IGenericDAO<T, PK
 
 	@Override
 	public void commit() {
+		this.entityManager.flush();
 		this.entityManager.getTransaction().commit();
 	}
 
