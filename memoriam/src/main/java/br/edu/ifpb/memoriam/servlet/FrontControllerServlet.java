@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.edu.ifpb.memoriam.entity.Contato;
 import br.edu.ifpb.memoriam.facade.ContatoController;
+import br.edu.ifpb.memoriam.facade.Resultado;
 
 @WebServlet("/controller.do")
 public class FrontControllerServlet extends HttpServlet {
@@ -44,7 +45,47 @@ public class FrontControllerServlet extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+		ContatoController contatoCtrl = new ContatoController();
+		String proxima = null;
+		
+		this.getServletContext().removeAttribute("msgs");
+		String operacao = request.getParameter("op");
+		
+		if (operacao == null) {
+			this.getServletContext().setAttribute("msgs", "Operação não especificada na requisição!");
+			return;
+		}
+		Resultado resultado = null;
+		String paginaSucesso = "controller.do?op=conctt";
+		String paginaErro = "contato/cadastro.jsp";
+		String proximaPagina = null;
+		
+		switch(operacao) {
+		case "cadctt":
+			resultado = contatoCtrl.cadastrar(request.getParameterMap());
+			if(!resultado.isErro()) {
+				proximaPagina = paginaSucesso;
+				request.setAttribute("msgs", resultado.getMensagensSucesso());
+			} else {
+				request.setAttribute("contato", (Contato) resultado.getEntidade());
+				request.setAttribute("msgs", resultado.getMensagensErro());
+				proximaPagina = paginaErro;
+			}
+			break;
+			
+		default:
+			request.setAttribute("erro", "Operação não especificada no servlet!");
+			proximaPagina= "../erro/erro.jsp";
+		}
+		
+		if (resultado.isErro()) {
+			RequestDispatcher dispatcher = request.getRequestDispatcher(proximaPagina);
+			dispatcher.forward(request, response);
+		} else {
+			response.sendRedirect(proximaPagina);
+		}
+		
+		
 	}
 
 }

@@ -11,7 +11,7 @@
 	<body>
 		<div class="container">
 			<div class="jumbotron">
-				<h1>Memoriam</h1>
+				<h1>Memori<i class="glyphicon glyphicon-phone"></i>m</h1>
 				<table class="table">
 					<thead>
 						<th>#</th>
@@ -24,14 +24,14 @@
 						<c:forEach var="contato" items="${contatos}">
 							<tr>
 								<td></td>
-								<td>${contato.nome}</td>
-								<td>${contato.telefone}</td>
-								<td>${contato.operadora}</td>
+								<td><a href="controller.do?op=edtctt&id=${contato.id}">${contato.nome}</td>
+								<td>${contato.fone}</td>
+								<td>${contato.operadora.nome}</td>
 							</tr>
 						</c:forEach>
 					</tbody>
 				</table>
-				
+				<a href="contato/cadastro.jsp" class="form-control btn btn-primary">Novo</a>
 			</div>
 		</div>
 	</body>
