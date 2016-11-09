@@ -65,6 +65,28 @@ public class ContatoController {
 		return resultado;
 	}
 	
+	public Resultado deletar(String[] ids) {
+		ContatoDAO dao = new ContatoDAO(PersistenceUtil.getCurrentEntityManager());
+		Resultado resultado = new Resultado();
+
+		resultado.setErro(false);		
+		dao.beginTransaction();
+
+		for(String id : ids) {
+			Contato contato = dao.find(Integer.parseInt(id));
+			if (contato == null) {
+				resultado.setErro(true);
+				resultado.setMensagensErro(Collections.singletonList("Erro ao deletar contato de id: " + id));
+			}
+			dao.delete(contato);
+		}
+		
+		dao.commit();
+
+		return resultado;
+		
+	}
+	
 	private boolean isParametrosValidos(Map<String, String[]> parametros) {
 		String[] id = parametros.get("id");
 		String[] nome = parametros.get("nome");

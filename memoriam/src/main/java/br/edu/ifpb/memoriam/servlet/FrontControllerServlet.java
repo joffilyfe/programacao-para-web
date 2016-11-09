@@ -110,6 +110,18 @@ public class FrontControllerServlet extends HttpServlet {
 			}
 			break;
 			
+		case "operadoraDeletar":
+			resultado = contatoCtrl.deletar(request.getParameterValues("id"));
+
+			if (!resultado.isErro()) {
+				request.setAttribute("msgs", resultado.getMensagensErro());
+			} else {
+				request.setAttribute("msgs", resultado.getMensagensErro());
+			}
+
+			proximaPagina = "controller.do?op=conctt";
+			break;
+			
 		case "operadoraCadastro":
 			resultado = operadoraCtrl.cadastrar(request.getParameterMap());
 			if (!resultado.isErro()) {
