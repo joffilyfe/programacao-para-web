@@ -11,16 +11,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.edu.ifpb.memoriam.entity.Contato;
+import br.edu.ifpb.memoriam.entity.Operadora;
 import br.edu.ifpb.memoriam.facade.ContatoController;
+import br.edu.ifpb.memoriam.facade.OperadoraController;
 import br.edu.ifpb.memoriam.facade.Resultado;
 
 @WebServlet("/controller.do")
 public class FrontControllerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	private ContatoController contatoCtrl = new ContatoController();
+	private OperadoraController operadoraCtrl = new OperadoraController();       
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ContatoController contatoCtrl = new ContatoController();
+
 		String proxima = null;
 		
 		this.getServletContext().removeAttribute("msgs");
@@ -50,7 +53,28 @@ public class FrontControllerServlet extends HttpServlet {
 				proxima = "controller.do?op=conctt";
 				request.setAttribute("msgs", resultado.getMensagensSucesso());
 			}
+
+		case "operadoras":
+			List<Operadora> operadoras = operadoraCtrl.consultar();
+			request.setAttribute("operadoras", operadoras);
+			request.setAttribute("title", "Operadoras");
+			proxima = "operadora/consulta.jsp";
+			break;
+
+		case "operadoraEditar":
+			resultado = operadoraCtrl.editar(request.getParameterMap());
+
+			if (!resultado.isErro()) {
+				request.setAttribute("operadora", (Operadora) resultado.getEntidade());
+				request.setAttribute("msgs", resultado.getMensagensErro());
+				proxima = "operadora/cadastro.jsp";
+			} else {
+				proxima = "controller.do?op=operadoras";
+				request.setAttribute("msgs", resultado.getMensagensSucesso());
+			}
+			break;
 		}
+		
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(proxima);
 		dispatcher.forward(request, response);
@@ -86,6 +110,18 @@ public class FrontControllerServlet extends HttpServlet {
 			}
 			break;
 			
+		case "operadoraCadastro":
+			resultado = operadoraCtrl.cadastrar(request.getParameterMap());
+			if (!resultado.isErro()) {
+				proximaPagina = "controller.do?op=operadoras";
+				request.setAttribute("msgs", resultado.getMensagensSucesso());
+			} else {
+				request.setAttribute("operadora", (Operadora) resultado.getEntidade());
+				request.setAttribute("msgs", resultado.getMensagensErro());
+				proximaPagina = "operadora/cadastro.jsp";
+			}
+			break;
+
 		default:
 			request.setAttribute("erro", "Operação não especificada no servlet!");
 			proximaPagina= "../erro/erro.jsp";
