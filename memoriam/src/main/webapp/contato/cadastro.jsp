@@ -13,17 +13,7 @@
 	<body>
 		<div class="container">
 			<div class="jumbotron">
-				<c:if test="${not empty msgs}">
-					<div align="left">
-						<div style="color: red">
-							<ul style="padding-left:0px;">
-								<c:forEach var="msg" items="${msgs}">
-									<li style="list-style-type: none;">${msg}</li>
-								</c:forEach>
-							</ul>
-						</div>
-					</div>
-				</c:if>
+				<%@ include file="/layout/mensagens.jsp" %>
 				<h1>Memori<i class="glyphicon glyphicon-phone"></i>m</h1>
 					<h2>Dados do contato</h2>
 					<form action="${pageContext.request.contextPath}/controller.do" method="POST" class="form-horizontal">
