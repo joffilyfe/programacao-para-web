@@ -20,7 +20,7 @@
 						<th>Operadora</th>
 					</thead>
 					
-					<tbody>
+					<tbody style="text-aling: left;">
 						<c:forEach var="contato" items="${contatos}">
 							<tr>
 								<td></td>

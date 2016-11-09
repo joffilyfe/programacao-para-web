@@ -27,16 +27,7 @@ public class ContatoController {
 	
 	public Resultado cadastrar(Map<String, String[]> parametros) {
 		Resultado resultado = new Resultado();
-		Operadora operadora = null;
-		String idOperadora = parametros.get("operadora")[0];
 
-		if(idOperadora!= null) {
-			OperadoraDAO opDao = new OperadoraDAO(PersistenceUtil.getCurrentEntityManager());
-			operadora = opDao.find(Integer.parseInt(idOperadora));
-			contato.setOperadora(operadora);
-		}
-		
-		
 		if (isParametrosValidos(parametros)) {
 			ContatoDAO dao = new ContatoDAO(PersistenceUtil.getCurrentEntityManager());
 			dao.beginTransaction();
@@ -63,7 +54,10 @@ public class ContatoController {
 		String[] nome = parametros.get("nome");
 		String[] fone = parametros.get("fone");
 		String[] dataAniv = parametros.get("dataaniv");
-		this.contato= new Contato();
+		Operadora operadora = null;
+		String idOperadora = parametros.get("operadora")[0];
+		
+		this.contato = new Contato();
 		this.mensagensErro = new ArrayList<String>();
 		
 		// Verifica ID
@@ -72,14 +66,14 @@ public class ContatoController {
 		}
 
 		// Verifica nome
-		if (nome== null || nome.length== 0 || nome[0].isEmpty()) {
+		if (nome == null || nome.length == 0 || nome[0].isEmpty()) {
 			this.mensagensErro.add("Nome é campo obrigatório!");
 		} else {
 			contato.setNome(nome[0]);
 		}
 
 		// Verifica telefone
-		if(fone== null|| fone.length== 0 || fone[0].isEmpty()) {
+		if(fone == null|| fone.length == 0 || fone[0].isEmpty()) {
 			this.mensagensErro.add("Fone é campo obrigatório!");
 		} else {
 			contato.setFone(fone[0]);
@@ -99,6 +93,18 @@ public class ContatoController {
 			} else {
 				this.mensagensErro.add("Formato inválido para a data de aniversário (use dd/mm/aaaa)!");
 			}
+		}
+
+
+		if (idOperadora != null && idOperadora.length() > 0 && !idOperadora.isEmpty()) {
+			OperadoraDAO opDao = new OperadoraDAO(PersistenceUtil.getCurrentEntityManager());
+			operadora = opDao.find(Integer.parseInt(idOperadora));
+		}
+		
+		if (operadora != null) {
+			contato.setOperadora(operadora);
+		} else {
+			this.mensagensErro.add("É necessário selecionar uma operadora");
 		}
 		
 		return this.mensagensErro.isEmpty();

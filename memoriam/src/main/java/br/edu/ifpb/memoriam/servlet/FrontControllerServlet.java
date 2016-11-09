@@ -46,7 +46,6 @@ public class FrontControllerServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ContatoController contatoCtrl = new ContatoController();
-		String proxima = null;
 		
 		this.getServletContext().removeAttribute("msgs");
 		String operacao = request.getParameter("op");
@@ -55,15 +54,16 @@ public class FrontControllerServlet extends HttpServlet {
 			this.getServletContext().setAttribute("msgs", "Operação não especificada na requisição!");
 			return;
 		}
+
 		Resultado resultado = null;
 		String paginaSucesso = "controller.do?op=conctt";
 		String paginaErro = "contato/cadastro.jsp";
 		String proximaPagina = null;
 		
 		switch(operacao) {
-		case "cadctt":
+		case "contatoCadastro":
 			resultado = contatoCtrl.cadastrar(request.getParameterMap());
-			if(!resultado.isErro()) {
+			if (!resultado.isErro()) {
 				proximaPagina = paginaSucesso;
 				request.setAttribute("msgs", resultado.getMensagensSucesso());
 			} else {

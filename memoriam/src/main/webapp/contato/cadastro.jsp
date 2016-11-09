@@ -26,7 +26,7 @@
 				<h1>Memori<i class="glyphicon glyphicon-phone"></i>m</h1>
 					<h2>Dados do contato</h2>
 					<form action="${pageContext.request.contextPath}/controller.do" method="POST" class="form-horizontal">
-						<input type="hidden" name="op" value="cadctt" />
+						<input type="hidden" name="op" value="contatoCadastro" />
 						<input id="nome" type="text" value="${contato.nome}" name="nome" placeholder="Nome" class="form-control">
 						<input id="fone" type="text" value="${contato.fone}" name="fone" placeholder="Telefone" class="form-control">
 						<fmt:formatDate var="dataAniv" value="${contato.dataAniversario}" pattern="dd/MM/yyyy"/>
