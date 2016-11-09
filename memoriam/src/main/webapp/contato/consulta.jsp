@@ -34,10 +34,39 @@
 							</c:forEach>
 						</tbody>
 					</table>
-					<button class="btn btn-danger form-control">Deletar</button>
+					<button id="btnDeletar" class="btn btn-danger form-control hidden">Deletar</button>
 				</form>
 				<a href="contato/cadastro.jsp" class="form-control btn btn-primary">Novo</a>
 			</div>
 		</div>
+		<script>
+			$(document).ready(function() {
+				var enabled = false;
+				var checkboxes = $(".operadora-select");
+
+				$(".operadora-select").on("click", function(e) {
+					
+					if ($(this).is(":checked")) {
+						enabled = true;
+					} else {
+						enabled = false;
+					}
+					
+					if (enabled) {
+						$("#btnDeletar").removeClass("hidden");
+					} else {
+						
+
+						for (var i = 0; i < checkboxes.length; i++) {
+							if (checkboxes[i].checked) {
+								return;
+							}
+						}
+
+						$("#btnDeletar").addClass("hidden");
+					}
+				})
+			});
+		</script>
 	</body>
 </html>
