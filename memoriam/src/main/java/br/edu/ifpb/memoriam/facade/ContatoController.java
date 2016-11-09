@@ -24,7 +24,23 @@ public class ContatoController {
 		ContatoDAO dao = new ContatoDAO(PersistenceUtil.getCurrentEntityManager());
 		return dao.findAll();
 	}
-	
+
+	public Resultado editar(Map<String, String[]> parametros) {
+		Resultado resultado = new Resultado();
+		ContatoDAO dao = new ContatoDAO(PersistenceUtil.getCurrentEntityManager());
+		this.contato = dao.find(Integer.parseInt(parametros.get("id")[0]));
+
+		if (this.contato == null) {
+			resultado.setErro(true);
+			resultado.setMensagensErro(Collections.singletonList("Contato não localizado"));
+		} else {
+			resultado.setErro(false);
+			resultado.setEntidade(this.contato);
+		}
+
+		return resultado;
+	}
+
 	public Resultado cadastrar(Map<String, String[]> parametros) {
 		Resultado resultado = new Resultado();
 
@@ -55,14 +71,14 @@ public class ContatoController {
 		String[] fone = parametros.get("fone");
 		String[] dataAniv = parametros.get("dataaniv");
 		Operadora operadora = null;
-		String idOperadora = parametros.get("operadora")[0];
-		
-		this.contato = new Contato();
+		String[] idOperadora = parametros.get("operadora");
+
 		this.mensagensErro = new ArrayList<String>();
+		this.contato = new Contato();
 		
 		// Verifica ID
 		if (id!= null && id.length > 0 && !id[0].isEmpty()) {
-			contato.setId(Integer.parseInt(id[0]));
+			this.contato.setId(Integer.parseInt(id[0]));
 		}
 
 		// Verifica nome
@@ -73,7 +89,7 @@ public class ContatoController {
 		}
 
 		// Verifica telefone
-		if(fone == null|| fone.length == 0 || fone[0].isEmpty()) {
+		if (fone == null|| fone.length == 0 || fone[0].isEmpty()) {
 			this.mensagensErro.add("Fone é campo obrigatório!");
 		} else {
 			contato.setFone(fone[0]);
@@ -82,8 +98,9 @@ public class ContatoController {
 		if (dataAniv== null || dataAniv.length== 0 || dataAniv[0].isEmpty()) {
 			this.mensagensErro.add("Data de aniversário é campo obrigatório!");
 		} else {
-			if(dataAniv[0].matches("(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/(19|20)\\d{2,2}")) {
-				try { SimpleDateFormat sdf= new SimpleDateFormat("dd/MM/yyyy");
+			if (dataAniv[0].matches("(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/(19|20)\\d{2,2}")) {
+				try {
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 					sdf.setLenient(false);
 					Date dataIni= sdf.parse(dataAniv[0]);
 					contato.setDataAniversario(dataIni);
@@ -96,9 +113,9 @@ public class ContatoController {
 		}
 
 
-		if (idOperadora != null && idOperadora.length() > 0 && !idOperadora.isEmpty()) {
+		if (idOperadora != null && idOperadora.length != 0 && !idOperadora[0].isEmpty()) {
 			OperadoraDAO opDao = new OperadoraDAO(PersistenceUtil.getCurrentEntityManager());
-			operadora = opDao.find(Integer.parseInt(idOperadora));
+			operadora = opDao.find(Integer.parseInt(idOperadora[0]));
 		}
 		
 		if (operadora != null) {

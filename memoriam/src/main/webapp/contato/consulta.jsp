@@ -24,7 +24,7 @@
 						<c:forEach var="contato" items="${contatos}">
 							<tr>
 								<td></td>
-								<td><a href="controller.do?op=edtctt&id=${contato.id}">${contato.nome}</td>
+								<td><a href="controller.do?op=contatoEditar&id=${contato.id}">${contato.nome}</td>
 								<td>${contato.fone}</td>
 								<td>${contato.operadora.nome}</td>
 							</tr>

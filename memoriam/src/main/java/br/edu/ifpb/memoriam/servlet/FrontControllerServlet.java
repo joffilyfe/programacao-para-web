@@ -37,6 +37,19 @@ public class FrontControllerServlet extends HttpServlet {
 			request.setAttribute("contatos", contatos);
 			request.setAttribute("title", "Consulta");
 			proxima = "contato/consulta.jsp";
+			break;
+
+		case "contatoEditar":
+			Resultado resultado = contatoCtrl.editar(request.getParameterMap());
+
+			if (!resultado.isErro()) {
+				request.setAttribute("contato", (Contato) resultado.getEntidade());
+				request.setAttribute("msgs", resultado.getMensagensErro());
+				proxima = "contato/cadastro.jsp";
+			} else {
+				proxima = "controller.do?op=conctt";
+				request.setAttribute("msgs", resultado.getMensagensSucesso());
+			}
 		}
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(proxima);
