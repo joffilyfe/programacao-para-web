@@ -10,6 +10,9 @@
 	
 	<body>
 		<div class="container">
+			<%@ include file="/layout/menu.jsp" %>
+		</div>
+		<div class="container">
 			<div class="jumbotron">
 				<h1>Memori<i class="glyphicon glyphicon-phone"></i>m</h1>
 				<form method="POST" action="${pageContext.request.contextPath}/controller.do?op=operadoraDeletar">
