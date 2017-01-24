@@ -1,46 +1,50 @@
 package br.edu.ifpb.memoriam.facade;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Resultado {
-	private Object entitade;
+	private Object entidade;
 	private boolean erro;
-	private List<String> mensagensErro;
-	private List<String> mensagensSucesso;
-	
+	private List<Mensagem> mensagens;
+
 	public Resultado() {
-		
-	}
-	
-	public List<String> getMensagensSucesso() {
-		return this.mensagensSucesso;
+		this.mensagens = new ArrayList<Mensagem>();
 	}
 
-	public void setMensagensSucesso(List<String> mensagensSucesso) {
-		this.mensagensSucesso = mensagensSucesso;
-	}
-	
-	public List<String> getMensagensErro() {
-		return this.mensagensErro;
-	}
-	
-	public void setMensagensErro(List<String> msgs) {
-		this.mensagensErro = msgs;
+	public void addMensagem(Mensagem m) {
+		this.mensagens.add(m);
 	}
 
 	public boolean isErro() {
-		return this.erro;
+		return erro;
 	}
 
 	public void setErro(boolean erro) {
 		this.erro = erro;
 	}
-	
+
 	public Object getEntidade() {
-		return this.entitade;
+		return entidade;
 	}
-	
+
 	public void setEntidade(Object entidade) {
-		this.entitade = entidade;
+		this.entidade = entidade;
+	}
+
+	public List<Mensagem> getMensagens() {
+		return mensagens;
+	}
+
+	public void setMensagens(List<Mensagem> mensagens) {
+		this.mensagens = mensagens;
+	}
+
+	public void addMensagens(List<String> mensagensErro, Categoria categoria) {
+		List<Mensagem> mensagens = new ArrayList<Mensagem>();
+		for (String s : mensagensErro) {
+			mensagens.add(new Mensagem(s, categoria));
+		}
+		this.mensagens.addAll(mensagens);
 	}
 }
