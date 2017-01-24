@@ -41,7 +41,7 @@ public class FrontControllerServlet extends HttpServlet {
 
 		switch(operacao) {
 		case "conctt":
-			List<Contato> contatos = contatoCtrl.consultar();
+			List<Contato> contatos = contatoCtrl.consultar((Usuario) session.getAttribute("usuario"));
 			request.setAttribute("contatos", contatos);
 			request.setAttribute("title", "Consulta");
 			proxima = "contato/consulta.jsp";
