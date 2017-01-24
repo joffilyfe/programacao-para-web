@@ -46,13 +46,14 @@ public class ContatoController {
 		return resultado;
 	}
 
-	public Resultado cadastrar(Map<String, String[]> parametros) {
+	public Resultado cadastrar(Map<String, String[]> parametros, Usuario usuario) {
 		Resultado resultado = new Resultado();
 
 		if (isParametrosValidos(parametros)) {
 			ContatoDAO dao = new ContatoDAO(PersistenceUtil.getCurrentEntityManager());
 			dao.beginTransaction();
 			if (this.contato.getId() == null) {
+				this.contato.setUsuario(usuario);
 				dao.insert(this.contato);
 			} else {
 				dao.update(this.contato);

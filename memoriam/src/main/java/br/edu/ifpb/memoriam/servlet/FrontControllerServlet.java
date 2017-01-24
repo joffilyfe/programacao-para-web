@@ -121,7 +121,7 @@ public class FrontControllerServlet extends HttpServlet {
 			}
 			break;
 		case "contatoCadastro":
-			resultado = contatoCtrl.cadastrar(request.getParameterMap());
+			resultado = contatoCtrl.cadastrar(request.getParameterMap(), usuario);
 			if (!resultado.isErro()) {
 				proximaPagina = paginaSucesso;
 				request.setAttribute("msgs", resultado.getMensagens());
