@@ -22,11 +22,11 @@ import br.edu.ifpb.memoriam.dao.PersistenceUtil;
 
 
 /**
- * Este filtro controla o EntityManager para conversações longas. O EM é colocado e retirado
+ * Este filtro controla o EntityManager para conversaï¿½ï¿½es longas. O EM ï¿½ colocado e retirado
  * da HttpSession a cada request para servlets e JSPs. Quando o servlet e os JSPs utilizarem
- * o EM (via DAOs, por exemplo) ele estará disponível via PersistenceUtil.getCurrentEntityManager().
- * Este filtro redireciona para a página principal de consulta caso a HttpSession tenha sido fechada. Ou seja,
- * se ele for ativado sem que uma sess~]ao tenha sido previamente criada, ele redirecionará para esta página index.jsp.
+ * o EM (via DAOs, por exemplo) ele estarï¿½ disponï¿½vel via PersistenceUtil.getCurrentEntityManager().
+ * Este filtro redireciona para a pï¿½gina principal de consulta caso a HttpSession tenha sido fechada. Ou seja,
+ * se ele for ativado sem que uma sess~]ao tenha sido previamente criada, ele redirecionarï¿½ para esta pï¿½gina index.jsp.
  * @author Fred
  *
  */
@@ -44,11 +44,11 @@ public class EntityManagerConversationFilter implements Filter {
 			FilterChain chain) throws IOException, ServletException {
 
 		EntityManager currentEntityManager;
-		
+
 		// Try to get a EntityManager from the HttpSession
-		HttpSession httpSession = 
+		HttpSession httpSession =
 			((HttpServletRequest) request).getSession();
-		EntityManager disconnectedEM = 
+		EntityManager disconnectedEM =
 			(EntityManager) httpSession
 				.getAttribute(ENTITYMANAGER_FACTORY_KEY);
 
@@ -59,21 +59,21 @@ public class EntityManagerConversationFilter implements Filter {
 
 			// Start a new conversation or in the middle?
 			if (disconnectedEM == null) {
-				logger.debug(context + ">>> Nova conversação");
+				logger.debug(context + ">>> Nova conversaï¿½ï¿½o");
 				// Define o modo manual de flush
 				currentEntityManager = emf.createEntityManager();
 				((org.hibernate.Session) currentEntityManager.getDelegate())
-					.setFlushMode(org.hibernate.FlushMode.MANUAL);				
+					.setFlushMode(org.hibernate.FlushMode.MANUAL);
 			} else {
-				logger.debug(context + "< Continuando conversação");
+				logger.debug(context + "< Continuando conversaï¿½ï¿½o");
 				currentEntityManager = disconnectedEM;
 			}
-			
+
 			ManagedEMContext.bind(emf, currentEntityManager);
 			logger.debug(context + "Associou EntityManager ao contexto");
 
-			logger.debug(context + "Processando servlet/JSP"); 
-			chain.doFilter(request, response); 
+			logger.debug(context + "Processando servlet/JSP");
+			chain.doFilter(request, response);
 
 			// End or continue the long-running conversation?
 			if (request.getAttribute(END_OF_CONVERSATION_FLAG) != null
@@ -84,18 +84,22 @@ public class EntityManagerConversationFilter implements Filter {
 
 				ManagedEMContext.unbind(emf);
 				logger.debug(context + "Desassociou EntityManager do contexto");
-				
-				httpSession.removeAttribute(ENTITYMANAGER_FACTORY_KEY);
-				logger.debug(context + "Retirou EntityManager da HttpSession");
 
-				logger.debug(context + "<<< Fim da conversação");
+				if (((HttpServletRequest) request).isRequestedSessionIdValid()) {
+					httpSession.removeAttribute(ENTITYMANAGER_FACTORY_KEY);
+					logger.debug(context + "Retirou EntityManager da HttpSession");
+				}
+
+				logger.debug(context + "<<< Fim da conversaï¿½ï¿½o");
 
 			} else {
 				ManagedEMContext.unbind(emf);
 				logger.debug(context + "Desassociou EntityManager do contexto");
-				
-				httpSession.setAttribute(ENTITYMANAGER_FACTORY_KEY, currentEntityManager);
-				logger.debug(context + "Associou EntityManager a HttpSession");
+
+				if (((HttpServletRequest) request).isRequestedSessionIdValid()) {
+					httpSession.setAttribute(ENTITYMANAGER_FACTORY_KEY, currentEntityManager);
+					logger.debug(context + "Associou EntityManager a HttpSession");
+				}
 
 				logger.debug(context + "> Retornando para o usuario");
 			}
@@ -112,12 +116,12 @@ public class EntityManagerConversationFilter implements Filter {
 			try {
 				if (PersistenceUtil.getCurrentEntityManager().getTransaction().isActive()) {
 					logger.debug(context
-									+ "Tentando rollback da transação após exception");
+									+ "Tentando rollback da transaï¿½ï¿½o apï¿½s exception");
 					PersistenceUtil.getCurrentEntityManager().getTransaction().rollback();
 				}
 			} catch (Throwable rbEx) {
 				logger.error(context
-						+ "Rollback não efetivado!",
+						+ "Rollback nï¿½o efetivado!",
 						rbEx);
 			} finally {
 				logger.error(context + "Cleanup after exception!");
@@ -127,10 +131,12 @@ public class EntityManagerConversationFilter implements Filter {
 				logger.debug(context + "Desassociou EntityManager do contexto");
 
 				currentEntityManager.close();
-				logger.debug(context + "Fechou EntityManager após exception");
+				logger.debug(context + "Fechou EntityManager apï¿½s exception");
 
-				httpSession.setAttribute(ENTITYMANAGER_FACTORY_KEY, null);
-				logger.debug(context + "Removeu EntityManager da HttpSession");
+				if (((HttpServletRequest) request).isRequestedSessionIdValid()) {
+					httpSession.setAttribute(ENTITYMANAGER_FACTORY_KEY, null);
+					logger.debug(context + "Removeu EntityManager da HttpSession");
+				}
 
 			}
 
