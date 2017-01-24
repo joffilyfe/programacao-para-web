@@ -45,7 +45,6 @@ public class FrontControllerServlet extends HttpServlet {
 
 		case "contatoEditar":
 			Resultado resultado = contatoCtrl.editar(request.getParameterMap());
-
 			if (!resultado.isErro()) {
 				request.setAttribute("contato", resultado.getEntidade());
 				request.setAttribute("msgs", resultado.getMensagens());
@@ -53,6 +52,7 @@ public class FrontControllerServlet extends HttpServlet {
 			} else {
 				proxima = "controller.do?op=conctt";
 			}
+			break;
 
 		case "operadoras":
 			List<Operadora> operadoras = operadoraCtrl.consultar();
