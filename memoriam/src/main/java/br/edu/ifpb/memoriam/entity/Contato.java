@@ -20,21 +20,25 @@ public class Contato {
 	@Column(name="ID_CONTATO")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@Column(name="NM_CONTATO")
 	private String nome;
-	
+
 	@Column(name="NU_FONE")
 	private String fone;
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="DT_ANIVERSARIO")
 	private Date dataAniversario;
-	
+
 	@JoinColumn(name="ID_OPERADORA")
 	@OneToOne
 	private Operadora operadora;
-	
+
+	@OneToOne
+	@JoinColumn(name="ID_USUARIO")
+	private Usuario usuario;
+
 	public Integer getId() {
 		return id;
 	}
@@ -73,6 +77,14 @@ public class Contato {
 
 	public void setOperadora(Operadora operadora) {
 		this.operadora = operadora;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	@Override
@@ -124,6 +136,6 @@ public class Contato {
 		return true;
 	}
 
-	
-	
+
+
 }
