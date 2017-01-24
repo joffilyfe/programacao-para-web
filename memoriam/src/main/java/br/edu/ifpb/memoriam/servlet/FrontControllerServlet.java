@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -120,8 +121,24 @@ public class FrontControllerServlet extends HttpServlet {
 				proximaPagina = "/login/login.jsp";
 				request.setAttribute("msgs", resultado.getMensagens());
 			} else {
+				usuario = (Usuario) resultado.getEntidade();
 				proximaPagina = "controller.do?op=conctt";
-				session.setAttribute("usuario", (resultado.getEntidade()));
+				session.setAttribute("usuario", usuario);
+				
+				// Lembra do usuário
+				String lembrar = request.getParameter("lembrar");
+				if(lembrar != null) {
+					Cookie c = new Cookie("loginCookie", usuario.getEmail());
+					c.setMaxAge(-1);response.addCookie(c);
+				} else{ 
+					for(Cookie cookie : request.getCookies()) {
+						if(cookie.getName().equals("loginCookie")) {
+							cookie.setValue(null);
+							cookie.setMaxAge(0);
+							response.addCookie(cookie);
+						}
+					}
+				}				
 			}
 			break;
 		case "contatoCadastro":
@@ -149,9 +166,9 @@ public class FrontControllerServlet extends HttpServlet {
 			resultado = operadoraCtrl.cadastrar(request.getParameterMap());
 			if (!resultado.isErro()) {
 				proximaPagina = "controller.do?op=operadoras";
-				request.setAttribute("msgs", resultado.getMensagens());
 			} else {
 				request.setAttribute("operadora", resultado.getEntidade());
+				request.setAttribute("msgs", resultado.getMensagens());
 				proximaPagina = "operadora/cadastro.jsp";
 			}
 			break;
