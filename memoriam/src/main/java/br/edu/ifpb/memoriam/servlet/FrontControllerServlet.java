@@ -9,10 +9,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import br.edu.ifpb.memoriam.entity.Contato;
 import br.edu.ifpb.memoriam.entity.Operadora;
+import br.edu.ifpb.memoriam.entity.Usuario;
 import br.edu.ifpb.memoriam.facade.ContatoController;
+import br.edu.ifpb.memoriam.facade.LoginController;
 import br.edu.ifpb.memoriam.facade.OperadoraController;
 import br.edu.ifpb.memoriam.facade.Resultado;
 
@@ -25,6 +28,7 @@ public class FrontControllerServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		HttpSession session = request.getSession();
 		String proxima = null;
 
 		this.getServletContext().removeAttribute("msgs");
@@ -74,6 +78,10 @@ public class FrontControllerServlet extends HttpServlet {
 			break;
 		}
 
+		//  Verifica se o usuário está logado
+		if (session.getAttribute("usuario") == null) {
+			proxima = "/login/login.jsp";
+		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(proxima);
 		dispatcher.forward(request, response);
@@ -83,6 +91,8 @@ public class FrontControllerServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ContatoController contatoCtrl = new ContatoController();
+		HttpSession session = request.getSession();
+		Usuario usuario = (Usuario) session.getAttribute("usuario");
 
 		this.getServletContext().removeAttribute("msgs");
 		String operacao = request.getParameter("op");
@@ -98,6 +108,18 @@ public class FrontControllerServlet extends HttpServlet {
 		String proximaPagina = null;
 
 		switch(operacao) {
+		case "login":
+			LoginController loginCtrl = new LoginController();
+			resultado = loginCtrl.isValido(request.getParameterMap());
+
+			if (resultado.isErro()) {
+				proximaPagina = "/login/login.jsp";
+				request.setAttribute("msgs", resultado.getMensagens());
+			} else {
+				proximaPagina = "controller.do?op=conctt";
+				session.setAttribute("usuario", (resultado.getEntidade()));
+			}
+			break;
 		case "contatoCadastro":
 			resultado = contatoCtrl.cadastrar(request.getParameterMap());
 			if (!resultado.isErro()) {
