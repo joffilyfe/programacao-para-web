@@ -52,8 +52,8 @@ public class ContatoController {
 		if (isParametrosValidos(parametros)) {
 			ContatoDAO dao = new ContatoDAO(PersistenceUtil.getCurrentEntityManager());
 			dao.beginTransaction();
+			this.contato.setUsuario(usuario);
 			if (this.contato.getId() == null) {
-				this.contato.setUsuario(usuario);
 				dao.insert(this.contato);
 			} else {
 				dao.update(this.contato);
