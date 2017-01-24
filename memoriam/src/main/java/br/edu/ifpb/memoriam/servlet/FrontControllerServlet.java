@@ -108,6 +108,10 @@ public class FrontControllerServlet extends HttpServlet {
 		String proximaPagina = null;
 
 		switch(operacao) {
+		case "logout":
+			proximaPagina = "login/login.jsp";
+			session.invalidate();
+			break;
 		case "login":
 			LoginController loginCtrl = new LoginController();
 			resultado = loginCtrl.isValido(request.getParameterMap());
@@ -157,7 +161,7 @@ public class FrontControllerServlet extends HttpServlet {
 			proximaPagina= "../erro/erro.jsp";
 		}
 
-		if (resultado.isErro()) {
+		if (resultado != null && resultado.isErro()) {
 			RequestDispatcher dispatcher = request.getRequestDispatcher(proximaPagina);
 			dispatcher.forward(request, response);
 		} else {
