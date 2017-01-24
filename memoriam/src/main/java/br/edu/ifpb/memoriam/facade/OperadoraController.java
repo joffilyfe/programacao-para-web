@@ -1,17 +1,15 @@
 package br.edu.ifpb.memoriam.facade;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import br.edu.ifpb.memoriam.dao.ContatoDAO;
 import br.edu.ifpb.memoriam.dao.OperadoraDAO;
 import br.edu.ifpb.memoriam.dao.PersistenceUtil;
 import br.edu.ifpb.memoriam.entity.Operadora;
 
 public class OperadoraController {
-	
+
 	Operadora operadora;
 	List<String> mensagensErro;
 
@@ -19,7 +17,7 @@ public class OperadoraController {
 		OperadoraDAO dao = new OperadoraDAO(PersistenceUtil.getCurrentEntityManager());
 		return dao.findAll();
 	}
-	
+
 	public Resultado cadastrar(Map<String, String[]> parametros) {
 		Resultado resultado = new Resultado();
 
@@ -33,13 +31,13 @@ public class OperadoraController {
 			}
 			dao.commit();
 			resultado.setErro(false);
-			resultado.setMensagensErro(
-				Collections.singletonList("Operadora criada com sucesso")
-			);
+			resultado.addMensagem(new Mensagem("Operadora criada com sucesso", Categoria.INFO));
 		} else {
 			resultado.setEntidade(this.operadora);
 			resultado.setErro(true);
-			resultado.setMensagensErro(this.mensagensErro);
+			for (String msg : this.mensagensErro) {
+				resultado.addMensagem(new Mensagem(msg, Categoria.ERRO));
+			}
 		}
 		return resultado;
 	}
@@ -51,7 +49,7 @@ public class OperadoraController {
 
 		if (this.operadora == null) {
 			resultado.setErro(true);
-			resultado.setMensagensErro(Collections.singletonList("Operadora não localizado"));
+			resultado.addMensagem(new Mensagem("Operadora não localizado", Categoria.ERRO));
 		} else {
 			resultado.setErro(false);
 			resultado.setEntidade(this.operadora);
@@ -59,7 +57,7 @@ public class OperadoraController {
 
 		return resultado;
 	}
-	
+
 	private boolean isParametrosValidos(Map<String, String[]> parametros) {
 		String[] id = parametros.get("id");
 		String[] nome = parametros.get("nome");
@@ -67,7 +65,7 @@ public class OperadoraController {
 
 		this.mensagensErro = new ArrayList<String>();
 		this.operadora = new Operadora();
-		
+
 		// Verifica ID
 		if (id!= null && id.length > 0 && !id[0].isEmpty()) {
 			this.operadora.setId(Integer.parseInt(id[0]));
@@ -86,7 +84,7 @@ public class OperadoraController {
 		} else {
 			operadora.setPrefixo(Integer.parseInt(prefixo[0]));
 		}
-		
+
 		return this.mensagensErro.isEmpty();
 	}
 }

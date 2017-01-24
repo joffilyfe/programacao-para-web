@@ -3,7 +3,6 @@ package br.edu.ifpb.memoriam.facade;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,7 @@ public class ContatoController {
 	private List<String> mensagensErro;
 
 	public ContatoController() {};
-	
+
 	public List<Contato> consultar() {
 		ContatoDAO dao = new ContatoDAO(PersistenceUtil.getCurrentEntityManager());
 		return dao.findAll();
@@ -32,7 +31,7 @@ public class ContatoController {
 
 		if (this.contato == null) {
 			resultado.setErro(true);
-			resultado.setMensagensErro(Collections.singletonList("Contato não localizado"));
+			resultado.addMensagem(new Mensagem("Contato não localizado", Categoria.ERRO));
 		} else {
 			resultado.setErro(false);
 			resultado.setEntidade(this.contato);
@@ -54,39 +53,40 @@ public class ContatoController {
 			}
 			dao.commit();
 			resultado.setErro(false);
-			resultado.setMensagensErro(
-				Collections.singletonList("Contato criado com sucesso")
-			);
+			resultado.addMensagem(new Mensagem("Contato criado com sucesso", Categoria.INFO));
 		} else {
 			resultado.setEntidade(this.contato);
 			resultado.setErro(true);
-			resultado.setMensagensErro(this.mensagensErro);
+			for (String msg : this.mensagensErro) {
+				resultado.addMensagem(new Mensagem(msg, Categoria.ERRO));
+			}
+
 		}
 		return resultado;
 	}
-	
+
 	public Resultado deletar(String[] ids) {
 		ContatoDAO dao = new ContatoDAO(PersistenceUtil.getCurrentEntityManager());
 		Resultado resultado = new Resultado();
 
-		resultado.setErro(false);		
+		resultado.setErro(false);
 		dao.beginTransaction();
 
 		for(String id : ids) {
 			Contato contato = dao.find(Integer.parseInt(id));
 			if (contato == null) {
 				resultado.setErro(true);
-				resultado.setMensagensErro(Collections.singletonList("Erro ao deletar contato de id: " + id));
+				resultado.addMensagem(new Mensagem("Erro ao deletar contato de id: " + id, Categoria.ERRO));
 			}
 			dao.delete(contato);
 		}
-		
+
 		dao.commit();
 
 		return resultado;
-		
+
 	}
-	
+
 	private boolean isParametrosValidos(Map<String, String[]> parametros) {
 		String[] id = parametros.get("id");
 		String[] nome = parametros.get("nome");
@@ -97,7 +97,7 @@ public class ContatoController {
 
 		this.mensagensErro = new ArrayList<String>();
 		this.contato = new Contato();
-		
+
 		// Verifica ID
 		if (id!= null && id.length > 0 && !id[0].isEmpty()) {
 			this.contato.setId(Integer.parseInt(id[0]));
@@ -116,7 +116,7 @@ public class ContatoController {
 		} else {
 			contato.setFone(fone[0]);
 		}
-		
+
 		if (dataAniv== null || dataAniv.length== 0 || dataAniv[0].isEmpty()) {
 			this.mensagensErro.add("Data de aniversário é campo obrigatório!");
 		} else {
@@ -139,13 +139,13 @@ public class ContatoController {
 			OperadoraDAO opDao = new OperadoraDAO(PersistenceUtil.getCurrentEntityManager());
 			operadora = opDao.find(Integer.parseInt(idOperadora[0]));
 		}
-		
+
 		if (operadora != null) {
 			contato.setOperadora(operadora);
 		} else {
 			this.mensagensErro.add("É necessário selecionar uma operadora");
 		}
-		
+
 		return this.mensagensErro.isEmpty();
 	}
 }
