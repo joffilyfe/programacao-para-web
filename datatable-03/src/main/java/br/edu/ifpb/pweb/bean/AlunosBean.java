@@ -71,6 +71,7 @@ public class AlunosBean {
 		dao.commit();
 
 		turmaDAO.beginTransaction();
+		this.turma.addAluno(this.aluno);
 		turmaDAO.update(this.turma);
 		turmaDAO.commit();
 

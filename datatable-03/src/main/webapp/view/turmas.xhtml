@@ -28,12 +28,14 @@
 		</h:column>
 		<h:column>
 			<f:facet name="header">Nome</f:facet>
-			<h:commandLink action="#{alunosBean.mostrarAlunos(turma)}">
+			<h:commandLink action="#{alunosBean.mostrarAlunos(turma)}" rendered="#{not turmasBean.editavel[turma.id]}">
 				<h:outputText value="#{turma.nome}" />
 			</h:commandLink>
 
-			<h:inputText id="nome" value="#{turma.nome}" />
-			<h:commandLink actionListener="#{turmasBean.salvar(turma)}" styleClass="fa fa-save" />
+			<h:panelGroup rendered="#{turmasBean.editavel[turma.id]}">
+				<h:inputText id="nome" value="#{turma.nome}" />
+				<h:commandLink actionListener="#{turmasBean.salvar(turma)}" styleClass="fa fa-save" />
+			</h:panelGroup>
 		</h:column>
 
 		<h:column>
