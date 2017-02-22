@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	<h:outputStylesheet library="css" name="style.css"/>
+	<h:outputStylesheet library="font-awesome" name="css/font-awesome.css"/>
+</h:head>
+
+<h:body>
+
+	<h1>Matrícula de aluno</h1>
+	
+	<h:form id="aluno">
+	<h:message for="matricula"/><br/>
+	<h:message for="nome" /><br/>
+	<h:message for="email" /><br/>
+
+	<h:panelGrid id="grid" columns="1">
+		<h:panelGroup>
+			<h:outputLabel for="matricula" value="Matricula"/>
+			<h:inputText id="matricula" value="#{alunosBean.aluno.matricula}" required="true"/>
+		</h:panelGroup>
+		<h:panelGroup>
+			<h:outputLabel for="nome" value="Nome"/>
+			<h:inputText id="nome" value="#{alunosBean.aluno.nome}" required="true"/>
+		</h:panelGroup>
+		<h:panelGroup>
+			<h:outputLabel for="email" value="E-mail"/>
+			<h:inputText id="email" value="#{alunosBean.aluno.email}" required="true"/>
+		</h:panelGroup>
+		
+		<h:panelGroup>
+			<h:commandButton action="#{alunosBean.cadastrar}" value="Matrícular" styleClass="btn"/>
+			<h:commandLink action="alunos" value="Cancelar" styleClass="btn" immediate="true"/>
+		</h:panelGroup>
+	</h:panelGrid>
+	</h:form>
+
+</h:body>
+</html>

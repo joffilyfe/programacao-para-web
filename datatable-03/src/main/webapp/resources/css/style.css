@@ -1,0 +1,51 @@
+* {
+	box-sizing: border-box;
+	font-family: sans-serif;
+}
+.greenRow {
+	background-color: #C8F7F2;
+}
+
+.whiteRow {
+	background-color: white;
+}
+
+.header {
+	background-color: lightgray;
+}
+
+.btn {
+	padding: 5px 15px;
+	background: #fff;
+	color: #000;
+	border: 1px solid #aaa;
+	text-decoration: none;
+	border-radius: 4px;
+	font-size: 17px;
+	display: inline-block;
+	margin-right: 7.5px;
+}
+
+.btn:hover {
+	color: #aaa;
+}
+
+table {
+	margin-top: 15px;
+}
+
+.fa-save {
+	color: brown;
+}
+
+.fa-remove {
+	text-decoration: none;
+	color: red;
+}
+
+input[type="text"] {
+	width: 90%;
+	padding: 5px;
+	font-size: 15px;
+	color: #bbb;
+}

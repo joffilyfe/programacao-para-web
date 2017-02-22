@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	<h:outputStylesheet library="css" name="style.css"/>
+	<h:outputStylesheet library="font-awesome" name="css/font-awesome.css"/>
+</h:head>
+
+<p>
+	<h:outputText rendered="#{empty alunosBean.alunos}" value="Esta turma não possui alunos cadastrados"/>
+</p>
+
+<h:form>
+	<h:commandLink action="#{alunosBean.home}" value="Home" styleClass="btn" />
+	<h:commandLink action="#{alunosBean.cadastrarView(alunosBean.turma)}" value="Matrícular" styleClass="btn" />
+
+	<h:dataTable var="aluno" value="#{alunosBean.alunos}"  rendered="#{not empty alunosBean.alunos}" style="background-color: gray;" rowClasses="greenRow,whiteRow" cellpadding="5" cellspacing="1" headerClass="header">
+		<h:column>
+			<f:facet name="header">ID</f:facet>
+			<h:outputText value="#{aluno.id}"/>
+		</h:column>
+		<h:column>
+			<f:facet name="header">Matrícula</f:facet>
+			<h:outputText value="#{aluno.matricula}"/>
+		</h:column>
+		<h:column>
+			<f:facet name="header">Nome</f:facet>
+			<h:outputText value="#{aluno.nome}"/>
+		</h:column>
+	</h:dataTable>
+</h:form>
+
+</html>
