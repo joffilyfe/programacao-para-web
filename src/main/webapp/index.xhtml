@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<head>
+		<title>Agenda de contatos</title>
+		<style>
+			body {
+				font-family: sans-serif;
+				font-size: 17px;
+			}
+			.container {
+				width: 70%;
+				margin: 0 auto;
+			}
+	
+			table {
+				width: 100%;
+				text-align: left;
+				border-spacing: 0;
+			}
+			
+			th {
+				padding: 8px;
+				line-height: 1.42857143;
+				vertical-align: top;
+				font-weight: bold;
+			}
+			
+			td {
+				font-weight: lighter;
+				border-top: 1px solid #ccc;
+				border-bottom: 1px solid #ccc;
+				margin: 0;
+				padding: 5px;
+			}
+			
+			.btn {
+				background: black;
+				color: white;
+				padding: 8px 15px;
+				font-size: 16px;
+				border: 0;
+				border-radius: 5px;
+			}
+		</style>
+	</head>
+	<h:body>
+		<div class="container">
+			<h:form>
+				<h:commandButton styleClass="btn btn-green" value="Novo contato" action="contatoFormulario"/>
+			</h:form>
+
+			<h:form>		
+				<h:dataTable var="contato" value="#{agendaBean.contatos}">
+					<h:column>
+						<f:facet name="header">Nome</f:facet>
+						<h:outputText value="#{contato.nome}"/>
+					</h:column>
+					<h:column>
+						<f:facet name="header">E-mail</f:facet>
+						<h:outputText value="#{contato.email}"/>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Telefone</f:facet>
+						<h:outputText value="#{contato.telefone}"/>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Excluir</f:facet>
+						<h:commandLink action="#{agendaBean.remover(contato)}" value="X"/>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Editar</f:facet>
+						<h:commandLink action="#{contatoBean.editar(contato)}" value="ED"/>
+					</h:column>
+				</h:dataTable>
+			</h:form>
+		</div>
+	</h:body>
+</html>

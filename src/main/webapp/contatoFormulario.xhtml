@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<head>
+		<title>Agenda de contatos</title>
+		<style>
+			body {
+				font-family: sans-serif;
+				font-size: 17px;
+			}
+			
+			.container {
+				width: 70%;
+				margin: 0 auto;
+			}
+			
+			label {
+				display: inline-block;
+				min-width: 90px;
+			}
+			
+			input[type="text"] {
+				padding: 8px;
+				font-size: 16px;
+			}
+			input[type="submit"] {
+				background: black;
+				color: white;
+				padding: 8px 15px;
+				font-size: 16px;
+				border: 0;
+				border-radius: 5px;
+			}
+		</style>
+	</head>
+	
+	<h:body>
+		
+		<h:form id="contato">
+			<!-- Títulos -->
+			<h:panelGroup rendered="#{not contatoBean.editando}">
+				<h1>Novo Contato</h1>
+			</h:panelGroup>
+			<h:panelGroup  rendered="#{contatoBean.editando}">
+				<h1>Editando contato</h1>
+			</h:panelGroup>
+			
+			<!-- inputs -->
+			<h:messages/>
+			<h:panelGrid>
+				<h:panelGroup>
+					<label>Nome</label>
+					<h:inputText id="nome" value="#{contatoBean.nome}" required="true">
+						<f:validateLength maximum="50" />
+					</h:inputText>
+				</h:panelGroup>
+				<h:panelGroup>
+					<label>E-mail</label>
+					<h:inputText id="email" value="#{contatoBean.email}" required="true">
+						<f:validateLength maximum="30" />
+					</h:inputText>
+				</h:panelGroup>
+				<h:panelGroup>
+					<label>Telefone</label>
+					<h:inputText id="telefone" value="#{contatoBean.telefone}" required="true">
+						<f:validateLength maximum="15" />
+					</h:inputText>
+				</h:panelGroup>
+			</h:panelGrid>
+
+			<!-- botões -->
+			<h:panelGroup rendered="#{not contatoBean.editando}">
+				<h:commandButton value="Cadastrar" action="#{contatoBean.cadastrar}"/>
+			</h:panelGroup>
+			<h:panelGroup  rendered="#{contatoBean.editando}">
+				<h:commandButton value="Salvar" action="#{contatoBean.salvar}"/>
+			</h:panelGroup>
+		</h:form>
+	</h:body>
+</html>
