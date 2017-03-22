@@ -33,6 +33,7 @@ public class TurmasBean {
 		if (this.flash.containsKey("turma")) {
 			// this.turma = (Turma) flash.get("turma");
 		}
+	
 	}
 
 	public String cadastrar() {
@@ -77,6 +78,24 @@ public class TurmasBean {
 		return "turmas?faces-redirect=true";
 	}
 
+	
+	public String deletarAluno(Aluno aluno) {
+		AlunoDAO adao = new AlunoDAO(PersistenceUtil.getCurrentEntityManager());
+		TurmaDAO tdao = new TurmaDAO(PersistenceUtil.getCurrentEntityManager());
+		Turma turma = aluno.getTurma();
+		
+		turma.getAlunos().remove(aluno);
+		
+		tdao.beginTransaction();
+		tdao.update(turma);
+		tdao.commit();
+
+		adao.beginTransaction();
+		adao.delete(aluno);
+		adao.commit();
+
+		return "turmas?faces-redirect=true";
+	}
 	/*
 	 * getters and setters
 	 */
@@ -122,3 +141,4 @@ public class TurmasBean {
 	}
 
 }
+ 

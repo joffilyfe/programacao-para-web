@@ -16,38 +16,45 @@
 <h:body>
 	<div class="container">
 		<div class="main-page">
-		<h1 class="page-header">#{turmasBean.turma.nome}</h1>
-		
-		<h:form id="aluno">
-			<label>Nome</label>
-			<h:inputText value="#{turmasBean.aluno.nome}" required="true"/>
-			
-			<label>Matrícula</label>
-			<h:inputText value="#{turmasBean.aluno.matricula}" required="true"/>
-			<h:commandButton value="Matricular" action="#{turmasBean.matricular}" styleClass="btn btn-default"/>
-		</h:form>
-		
-		<h:dataTable
-			var="aluno" value="#{turmasBean.turma.alunos}"
-			rendered="#{not empty turmasBean.turma.alunos}"
-			styleClass="table table-striped table-hover">
-			
-			<h:column>
-				<f:facet name="header">id</f:facet>
-				<h:outputText value="#{aluno.id}"/>
-			</h:column>
+			<h1 class="page-header">#{turmasBean.turma.nome}</h1>
 
-			<h:column>
-				<f:facet name="header">Nome</f:facet>
-				<h:outputText value="#{aluno.nome}"/>
-			</h:column>
+			<h:form id="aluno">
+				<label>Nome</label>
+				<h:inputText value="#{turmasBean.aluno.nome}" required="true" />
 
-			<h:column>
-				<f:facet name="header">MAtrícula</f:facet>
-				<h:outputText value="#{aluno.matricula}"/>
-			</h:column>
-								
-		</h:dataTable>
+				<label>Matrícula</label>
+				<h:inputText value="#{turmasBean.aluno.matricula}" required="true" />
+				<h:commandButton value="Matricular"
+					action="#{turmasBean.matricular}" styleClass="btn btn-default" />
+			</h:form>
+
+			<h:form>
+				<h:dataTable var="aluno" value="#{turmasBean.turma.alunos}"
+					rendered="#{not empty turmasBean.turma.alunos}"
+					styleClass="table table-striped table-hover">
+
+					<h:column>
+						<f:facet name="header">id</f:facet>
+						<h:outputText value="#{aluno.id}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">Nome</f:facet>
+						<h:outputText value="#{aluno.nome}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">MAtrícula</f:facet>
+						<h:outputText value="#{aluno.matricula}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">Remover</f:facet>
+						<h:commandButton value="Remover"
+							action="#{turmasBean.deletarAluno(aluno)}" />
+					</h:column>
+				</h:dataTable>
+			</h:form>
 		</div>
 	</div>
 </h:body>
